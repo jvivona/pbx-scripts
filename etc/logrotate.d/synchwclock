@@ -1,0 +1,8 @@
+/var/log/synchwclock.log {
+        rotate 7
+        daily
+        missingok
+        notifempty
+        compress
+
+}
