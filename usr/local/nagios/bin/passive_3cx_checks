@@ -1,0 +1,5 @@
+HOST="`hostname | tr '[:lower:]' "[:upper:]'`"
+/usr/local/nagios/bin/nsca_wrapper -H $HOST -S "p_3CX_HTTP" -C "/usr/local/nagios/libexec/check_http -H localhost -s 3CX "
+/usr/local/nagios/bin/nsca_wrapper -H $HOST -S "p_3CX_Port5060" -C "/usr/local/nagios/libexec/check_tcp -H localhost -p 5060"
+/usr/local/nagios/bin/nsca_wrapper -H $HOST -S "p_3CX_Services1" -C "/usr/local/nagios/libexec/check_procs -a /usr/lib/3cxpbx -u phonesystem -c 4:4"
+/usr/local/nagios/bin/nsca_wrapper -H $HOST -S "p_3CX_Services2" -C "/usr/local/nagios/libexec/check_procs -a /usr/sbin/3CX -u phonesystem -c 6:6"

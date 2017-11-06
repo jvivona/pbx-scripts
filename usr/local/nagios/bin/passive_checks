@@ -1,0 +1,4 @@
+HOST="`hostname | tr '[:lower:]' "[:upper:]'`"
+/usr/local/nagios/bin/nsca_wrapper -H $HOST -S "p_linux_disk" -C "/usr/local/nagios/libexec/check_disk -w 50% -c 25%"
+/usr/local/nagios/bin/nsca_wrapper -H $HOST -S "p_linux_cpu" -C "/usr/local/nagios/libexec/check_cpu_stats.sh -w 0.7 -c 0.9"
+/usr/local/nagios/bin/nsca_wrapper -H $HOST -S "p_linux_up" -C "/usr/local/nagios/bin/check_uptime -w @30:120 -c @0:30"
