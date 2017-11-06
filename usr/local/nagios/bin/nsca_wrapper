@@ -36,11 +36,11 @@ version=0.6
 # but not generally as good to do that. If you DNS server is down, your passive
 # service check results will not reach the NSCA/Nagios server and will
 # therefore go stale causing warning/critical conditions.
-NAGIOS_SERVER="nagios.datacenter.ajcomputers.local"
+NAGIOS_SERVER="nagios.datacenter.ajcomputers.com"
 
 # This should be the full path to the SEND_NSCA binary. Use this only if your
 # send _nsca program is not in the PATH of the user executing the nsca_wrapper
-SEND_NSCA="/usr/local/nagios/libexec/send_nsca"
+SEND_NSCA="/usr/sbin/send_nsca"
 
 # This should be the path to your send_nsca.cfg or equivalent config. This
 # config is necessary to tell the send_nsca program how to connect to your
