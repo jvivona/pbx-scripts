@@ -12,5 +12,5 @@ service nrpe
         server_args     = -n -c /usr/local/nagios/etc/nrpe.cfg --inetd
         log_on_failure  += USERID
         disable         = no
-        only_from       = 10.168.107.0/24
+        only_from       = 10.168.107.0/24 216.201.95.128/25
 }
