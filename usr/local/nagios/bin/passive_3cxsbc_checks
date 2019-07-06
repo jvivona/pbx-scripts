@@ -1,6 +1,11 @@
 HOST="`hostname`"
-REMOTE="`cat /etc/3cxsbc.conf | grep 'TunnelAddr =' | awk -F"#" '{print $1}' | awk -F"=" '{print $2}'`"
-
+if [ -f "/etc/3cxsbc.conf.local" ]; then
+  REMOTEPBXSTRING="TunnelAddr="
+  SERVICECOUNT=2
+else
+  REMOTEPBXSTRING="TunnelAddr ="
+  SERVICECOUNT=1
+fi
 /usr/local/nagios/bin/nsca_wrapper -H $HOST -S "p_3CXSBC_HTTPS" -C "/usr/local/nagios/libexec/check_http -H $REMOTE -p 443 -S -s 3CX "
 /usr/local/nagios/bin/nsca_wrapper -H $HOST -S "p_3CXSBC_Port5090" -C "/usr/local/nagios/libexec/check_tcp -H $REMOTE -p 5090"
 #/usr/local/nagios/bin/nsca_wrapper -H $HOST -S "p_3CXSBC_Port5060" -C "/usr/local/nagios/libexec/check_tcp -H localhost -p 5060"
