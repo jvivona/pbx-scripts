@@ -44,7 +44,7 @@ while test -n "$1"; do
     shift
 done
 
-value=`/bin/upsc $ups $variable`
+value=`/bin/upsc $ups $variable > /dev/stdout 2> /dev/null`
 
 echo $ups - $variable = $value
 
