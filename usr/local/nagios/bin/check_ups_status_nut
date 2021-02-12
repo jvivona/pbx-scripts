@@ -1,0 +1,65 @@
+#!/bin/bash
+STATE_OK=0
+STATE_WARNING=1
+STATE_CRITICAL=2
+STATE_UNKNOWN=3
+STATE_DEPENDENT=4
+IFS=' '
+
+usage1="Usage: $0 -u <ups>"
+exitstatus=$STATE_UNKNOWN #default
+while test -n "$1"; do
+    case "$1" in
+        -u)
+            ups=$2
+            shift
+            ;;
+        -h)
+            echo $usage1;
+            echo
+            exit $STATE_UNKNOWN
+            ;;
+        -H)
+            host=$2
+            shift
+            ;;
+        *)
+            echo "Unknown argument: $1"
+            echo $usage1;
+            echo
+            exit $STATE_UNKNOWN
+            ;;
+    esac
+    shift
+done
+
+currentstatus=`/bin/upsc $ups ups.status > /dev/stdout 2> /dev/null`
+read -ra upslinestatus <<< "$currentstatus"
+
+# if blank, send unknown - something is wrong here
+if [ -z "$currentstatus" ]
+then
+		echo "Status Not Found for " $ups " " $currentstatus;
+        exit $STATE_UNKNOWN;
+fi
+
+
+if [ "${upslinestatus[0]}" != "OL" ]; then
+    echo "UPS Current Status : " $currentstatus
+    exit $STATE_CRITICAL;
+fi
+
+# if we are here - the UPS is online - get the rest of the metadata for info purposes
+
+echo "MFG Date : " `/bin/upsc $ups battery.mfr.date > /dev/stdout 2> /dev/null`
+echo "MFG      : " `/bin/upsc $ups device.mfr > /dev/stdout 2> /dev/null`
+echo "Model    : " `/bin/upsc $ups device.model > /dev/stdout 2> /dev/null`
+echo "Serial   : " `/bin/upsc $ups device.serial > /dev/stdout 2> /dev/null`
+echo "Status   : " `/bin/upsc $ups ups.status > /dev/stdout 2> /dev/null`
+echo "Load     : " `/bin/upsc $ups ups.load > /dev/stdout 2> /dev/null`
+echo "Runtime  : " `/bin/upsc $ups battery.runtime > /dev/stdout 2> /dev/null`
+
+
+exit $STATE_OK;
+
+
