@@ -1,0 +1,72 @@
+#!/bin/bash
+
+STATE_OK=0
+STATE_WARNING=1
+STATE_CRITICAL=2
+STATE_UNKNOWN=3
+STATE_DEPENDENT=4
+IFS=' '
+
+usage1="Usage: $0 -u <ups> -w <days> -c <days>"
+exitstatus=$STATE_UNKNOWN #default
+while test -n "$1"; do
+    case "$1" in
+        -c)
+            crit=$2
+            shift
+            ;;
+        -w)
+            warn=$2
+            shift
+            ;;
+        -u)
+            ups=$2
+            shift
+            ;;
+        -h)
+            echo $usage1;
+            echo
+            exit $STATE_UNKNOWN
+            ;;
+        *)
+            echo "Unknown argument: $1"
+            echo $usage1;
+            echo
+            exit $STATE_UNKNOWN
+            ;;
+    esac
+    shift
+done
+
+battreplacedate=`/bin/upsc $ups battery.mfr.date  > /dev/stdout 2> /dev/null`
+
+# if blank, warning
+if [ -z $battreplacedate ]
+then
+      echo "Battery Replacement Date Not Found for " $ups " " $battreplacedate;
+      exit $STATE_UNKNOWN;
+fi
+
+echo "Last Battery Replacement : " $battreplacedate;
+checkdate=$(date -d $battreplacedate  +%s)
+#echo $checkdate
+today=$(date -d 'now' +%s)
+#echo $today
+
+diff=$(( (( today - checkdate )/86400) ))
+
+echo "Battery Age in Days : " $diff;
+
+if [[ $diff -ge $crit ]]; then
+echo "Battery over lifespan, age in days : " $diff;
+exit $STATE_CRITICAL;
+fi
+
+if [[ $diff -ge $warn ]]; then
+echo "Battery nearing lifespan, age in days : " $diff;
+exit $STATE_WARNING;
+fi
+
+echo "Battery Age is OK";
+exit $STATE_OK;
+
