@@ -1,3 +1,3 @@
 HOST="`hostname`"
 	
-/usr/local/nagios/bin/nsca_wrapper -H $HOST -S "p_ups_battery" -C "/usr/local/nagios/libexec/check_ups_nut -u ups001 -v battery.charge -w 95 -c 90"
+/usr/local/nagios/bin/nsca_wrapper -H $HOST -S "p_ups_charge" -C "/usr/local/nagios/libexec/check_ups_nut -u ups001 -v battery.charge -w 95 -c 90"
