@@ -1,0 +1,3 @@
+HOST="`hostname`"
+
+/usr/local/nagios/bin/nsca_wrapper -H $HOST -S "p_ups_status" -C "/usr/local/nagios/libexec/check_ups_status_nut -u ups001"
